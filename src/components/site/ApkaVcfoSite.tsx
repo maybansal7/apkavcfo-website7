@@ -1011,7 +1011,7 @@ const ApkaVcfoSite = () => {
                 ))}
               </div>
 
-              <div className="mt-8 grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
+              <div className="mt-8 grid gap-6 xl:grid-cols-[1.35fr_0.65fr] xl:items-stretch">
                 <div className="rounded-[1.75rem] border border-border/70 bg-background/70 p-5 md:p-6">
                   <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -1089,8 +1089,8 @@ const ApkaVcfoSite = () => {
                   </div>
                 </div>
 
-                <div className="grid gap-6">
-                  <div className="rounded-[1.75rem] border border-border/70 bg-background/70 p-6">
+                <div className="h-full rounded-[1.75rem] border border-border/70 bg-background/70 p-6">
+                  <div className="flex h-full flex-col">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="font-stats text-sm uppercase tracking-[0.18em] text-muted-foreground">Analysis Filters</p>
@@ -1127,23 +1127,23 @@ const ApkaVcfoSite = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
 
-                  <div className="rounded-[1.75rem] bg-primary p-6 text-primary-foreground shadow-brand">
-                    <p className="font-stats text-sm uppercase tracking-[0.18em] text-primary-foreground/60">CFO Callout</p>
-                    <h4 className="mt-3 text-2xl font-semibold">{focusContent.callout}</h4>
-                    <div className="mt-6 space-y-3">
-                      <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
-                        <p className="text-sm text-primary-foreground/72">Average net margin across this filter</p>
-                        <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{average(chartData.map((item) => item.margin))}%</p>
-                      </div>
-                      <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
-                        <p className="text-sm text-primary-foreground/72">Budget variance in latest period</p>
-                        <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{latestPoint.variance >= 0 ? "+" : ""}{latestPoint.variance}%</p>
-                      </div>
-                      <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
-                        <p className="text-sm text-primary-foreground/72">Receivables watchlist</p>
-                        <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{formatLakhs(latestPoint.receivables)}</p>
+                    <div className="mt-6 rounded-[1.75rem] bg-primary p-6 text-primary-foreground shadow-brand">
+                      <p className="font-stats text-sm uppercase tracking-[0.18em] text-primary-foreground/60">CFO Callout</p>
+                      <h4 className="mt-3 text-2xl font-semibold">{focusContent.callout}</h4>
+                      <div className="mt-6 space-y-3">
+                        <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
+                          <p className="text-sm text-primary-foreground/72">Average net margin across this filter</p>
+                          <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{average(chartData.map((item) => item.margin))}%</p>
+                        </div>
+                        <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
+                          <p className="text-sm text-primary-foreground/72">Budget variance in latest period</p>
+                          <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{latestPoint.variance >= 0 ? "+" : ""}{latestPoint.variance}%</p>
+                        </div>
+                        <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
+                          <p className="text-sm text-primary-foreground/72">Receivables watchlist</p>
+                          <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{formatLakhs(latestPoint.receivables)}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
