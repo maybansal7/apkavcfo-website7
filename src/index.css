@@ -157,7 +157,7 @@ All colors MUST be HSL.
   }
 
   .glass-nav {
-    @apply border border-primary-foreground/10 bg-primary/78 text-primary-foreground backdrop-blur-xl;
+    @apply border border-primary-foreground/10 bg-primary/80 text-primary-foreground backdrop-blur-xl;
   }
 
   .surface-card {
