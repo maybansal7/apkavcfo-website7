@@ -9,8 +9,10 @@ import {
   Briefcase,
   Building2,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   FileText,
+  Filter,
   Globe2,
   HandCoins,
   IndianRupee,
@@ -41,11 +43,13 @@ import {
   Zap,
 } from "lucide-react";
 import {
+  Area,
   Bar,
   CartesianGrid,
   ComposedChart,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -53,11 +57,13 @@ import {
 } from "recharts";
 
 import founderPhoto from "@/assets/mayank-bansal-photo.jpg";
-import logo from "@/assets/apkavcfo-logo.png";
+import logo from "@/assets/apkavcfo-logo-clean.png";
 import AnimatedCounter from "@/components/site/AnimatedCounter";
 import SectionReveal from "@/components/site/SectionReveal";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 const whatsappUrl =
@@ -154,6 +160,19 @@ type Service = {
   description: string;
 };
 
+type DashboardView = "monthly" | "quarterly";
+type DashboardSegment = "All Clients" | "India MSMEs" | "US & UAE";
+type DashboardFocus = "profitability" | "cashflow" | "controls";
+
+type DashboardDatum = {
+  label: string;
+  revenue: number;
+  margin: number;
+  cash: number;
+  receivables: number;
+  variance: number;
+};
+
 const services: Service[] = [
   { category: "Strategic Finance", icon: BarChart3, title: "P&L Management & Analysis", description: "Turn raw numbers into monthly performance narratives and decision-ready insights." },
   { category: "Strategic Finance", icon: PieChart, title: "Profitability Mapping", description: "Pinpoint margin drivers by product, client, channel, and geography." },
@@ -241,26 +260,108 @@ const painPoints = [
   },
 ];
 
-const monthlyChartData = [
-  { label: "Jan", revenue: 15, margin: 12 },
-  { label: "Feb", revenue: 16, margin: 13 },
-  { label: "Mar", revenue: 14, margin: 11 },
-  { label: "Apr", revenue: 18, margin: 14 },
-  { label: "May", revenue: 21, margin: 16 },
-  { label: "Jun", revenue: 24, margin: 18 },
+const dashboardSegments: DashboardSegment[] = ["All Clients", "India MSMEs", "US & UAE"];
+
+const dashboardFocusOptions: { id: DashboardFocus; label: string }[] = [
+  { id: "profitability", label: "Profitability Lens" },
+  { id: "cashflow", label: "Cash Flow Lens" },
+  { id: "controls", label: "Control Lens" },
 ];
 
-const quarterlyChartData = [
-  { label: "Q1", revenue: 45, margin: 12 },
-  { label: "Q2", revenue: 52, margin: 15 },
-  { label: "Q3", revenue: 61, margin: 18 },
-  { label: "Q4", revenue: 75, margin: 22 },
-];
+const dashboardData: Record<DashboardView, Record<DashboardSegment, DashboardDatum[]>> = {
+  monthly: {
+    "All Clients": [
+      { label: "Jan", revenue: 15, margin: 12, cash: 7, receivables: 6, variance: -2 },
+      { label: "Feb", revenue: 16, margin: 13, cash: 8, receivables: 5, variance: -1 },
+      { label: "Mar", revenue: 14, margin: 11, cash: 6, receivables: 7, variance: -3 },
+      { label: "Apr", revenue: 18, margin: 14, cash: 9, receivables: 5, variance: 1 },
+      { label: "May", revenue: 21, margin: 16, cash: 11, receivables: 4, variance: 2 },
+      { label: "Jun", revenue: 24, margin: 18, cash: 13, receivables: 4, variance: 3 },
+    ],
+    "India MSMEs": [
+      { label: "Jan", revenue: 11, margin: 11, cash: 5, receivables: 5, variance: -2 },
+      { label: "Feb", revenue: 12, margin: 12, cash: 5, receivables: 5, variance: -1 },
+      { label: "Mar", revenue: 12, margin: 11, cash: 4, receivables: 6, variance: -2 },
+      { label: "Apr", revenue: 14, margin: 13, cash: 6, receivables: 5, variance: 1 },
+      { label: "May", revenue: 16, margin: 14, cash: 7, receivables: 4, variance: 2 },
+      { label: "Jun", revenue: 18, margin: 16, cash: 8, receivables: 4, variance: 3 },
+    ],
+    "US & UAE": [
+      { label: "Jan", revenue: 8, margin: 14, cash: 4, receivables: 3, variance: 0 },
+      { label: "Feb", revenue: 9, margin: 15, cash: 4, receivables: 3, variance: 1 },
+      { label: "Mar", revenue: 10, margin: 16, cash: 5, receivables: 3, variance: 1 },
+      { label: "Apr", revenue: 11, margin: 17, cash: 6, receivables: 2, variance: 2 },
+      { label: "May", revenue: 13, margin: 18, cash: 7, receivables: 2, variance: 2 },
+      { label: "Jun", revenue: 15, margin: 20, cash: 8, receivables: 2, variance: 3 },
+    ],
+  },
+  quarterly: {
+    "All Clients": [
+      { label: "Q1", revenue: 45, margin: 12, cash: 21, receivables: 18, variance: -6 },
+      { label: "Q2", revenue: 52, margin: 15, cash: 25, receivables: 14, variance: 2 },
+      { label: "Q3", revenue: 61, margin: 18, cash: 29, receivables: 12, variance: 5 },
+      { label: "Q4", revenue: 75, margin: 22, cash: 34, receivables: 10, variance: 8 },
+    ],
+    "India MSMEs": [
+      { label: "Q1", revenue: 33, margin: 11, cash: 15, receivables: 15, variance: -4 },
+      { label: "Q2", revenue: 40, margin: 13, cash: 18, receivables: 13, variance: 1 },
+      { label: "Q3", revenue: 46, margin: 15, cash: 21, receivables: 11, variance: 3 },
+      { label: "Q4", revenue: 55, margin: 18, cash: 25, receivables: 9, variance: 6 },
+    ],
+    "US & UAE": [
+      { label: "Q1", revenue: 24, margin: 15, cash: 11, receivables: 8, variance: 1 },
+      { label: "Q2", revenue: 29, margin: 18, cash: 13, receivables: 7, variance: 3 },
+      { label: "Q3", revenue: 36, margin: 20, cash: 16, receivables: 6, variance: 5 },
+      { label: "Q4", revenue: 44, margin: 24, cash: 19, receivables: 5, variance: 7 },
+    ],
+  },
+};
 
-const insightCards = [
-  { title: "Profitability Analysis", description: "Product-wise and client-wise margin drill-down" },
-  { title: "Expense Variance", description: "Monthly budget vs actuals with alert flags" },
-  { title: "Cash Forecasting", description: "12-week rolling cash position report" },
+const dashboardFocusContent: Record<
+  DashboardFocus,
+  {
+    title: string;
+    description: string;
+    bullets: string[];
+    callout: string;
+  }
+> = {
+  profitability: {
+    title: "Margin expansion becomes visible before year-end closes.",
+    description: "Track revenue, margin, and budget variance together so pricing, service mix, and delivery efficiency are reviewed in one place.",
+    bullets: [
+      "Client-wise and service-line margin drill-down",
+      "Budget vs actual flags highlighted period by period",
+      "Faster pricing and profitability review before month-end slip happens",
+    ],
+    callout: "Best for founders asking: where is profit actually coming from?",
+  },
+  cashflow: {
+    title: "Cash pressure shows up earlier than the bank balance suggests.",
+    description: "Bring cash buffer and receivables into the same reporting view so collections risk, runway, and weekly priorities are obvious.",
+    bullets: [
+      "Receivables heatmap for overdue collections",
+      "12-week cash position and runway visibility",
+      "Working-capital actions linked directly to reporting cadence",
+    ],
+    callout: "Best for teams saying: profitable hai, but cash kyun nahi bach raha?",
+  },
+  controls: {
+    title: "Controls improve when reporting becomes operational, not cosmetic.",
+    description: "Highlight variance, cleanup load, and process drift so finance teams can fix root causes instead of only compiling reports.",
+    bullets: [
+      "Expense variance alerts with follow-up notes",
+      "Month-close blockers and data cleanup indicators",
+      "SOP-led reporting so numbers stay reliable as the team grows",
+    ],
+    callout: "Best for businesses that need disciplined reporting, not just prettier dashboards.",
+  },
+};
+
+const dashboardFeatureCards = [
+  { title: "Profitability Analysis", description: "Product-wise and client-wise margin drill-down with pricing triggers." },
+  { title: "Expense Variance", description: "Monthly budget vs actuals with alerts, comments, and owner visibility." },
+  { title: "Cash Forecasting", description: "12-week rolling cash position report with receivables pressure tracking." },
 ];
 
 const processSteps = [
@@ -284,30 +385,6 @@ const founderSkills = [
   "US & UAE Accounting",
   "GST, TDS & Indian Compliance",
   "AI & Automation Tools",
-];
-
-const testimonials = [
-  {
-    initials: "RS",
-    title: "Manufacturing Business, Rajasthan",
-    name: "Rahul S.",
-    quote: "CA Mayank transformed our monthly reporting. We went from guessing our margins to knowing exactly where we stood — every single month.",
-    accent: "accent",
-  },
-  {
-    initials: "US",
-    title: "CPA Firm, United States",
-    name: "Client, USA",
-    quote: "The QuickBooks cleanup and reconciliation work was exceptional. Our CPA firm now gets clean, accurate books every month without any back-and-forth.",
-    accent: "primary",
-  },
-  {
-    initials: "AE",
-    title: "Trading Company, UAE",
-    name: "Business Owner",
-    quote: "His Excel automation tools saved our team 15+ hours every month. The bank-to-GL tool alone was worth the entire engagement.",
-    accent: "success",
-  },
 ];
 
 const footerServices = ["Virtual CFO", "Cash Flow Management", "Tax Planning", "Automation Tools", "US Bookkeeping", "UAE VAT Filing"];
@@ -368,7 +445,29 @@ const SectionHeading = ({
   </div>
 );
 
-const ChartTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number }>; label?: string }) => {
+const formatLakhs = (value: number) => `₹ ${value}L`;
+
+const average = (values: number[]) => Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+
+const chunkItems = <T,>(items: T[], size: number) => {
+  const chunks: T[][] = [];
+
+  for (let index = 0; index < items.length; index += size) {
+    chunks.push(items.slice(index, index + size));
+  }
+
+  return chunks;
+};
+
+const ChartTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: Array<{ name: string; value: number | string }>;
+  label?: string;
+}) => {
   if (!active || !payload?.length) return null;
 
   return (
@@ -377,7 +476,14 @@ const ChartTooltip = ({ active, payload, label }: { active?: boolean; payload?: 
       <div className="mt-2 space-y-1 text-sm text-muted-foreground">
         {payload.map((entry) => (
           <p key={entry.name}>
-            {entry.name}: <span className="font-medium text-foreground">{entry.value}</span>
+            {entry.name}:{" "}
+            <span className="font-medium text-foreground">
+              {typeof entry.value === "number"
+                ? entry.name === "Net Profit"
+                  ? `${entry.value}%`
+                  : formatLakhs(entry.value)
+                : entry.value}
+            </span>
           </p>
         ))}
       </div>
@@ -386,11 +492,16 @@ const ChartTooltip = ({ active, payload, label }: { active?: boolean; payload?: 
 };
 
 const ApkaVcfoSite = () => {
+  const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState<ServiceCategory>("All");
   const [activePainPoint, setActivePainPoint] = useState(0);
-  const [chartView, setChartView] = useState<"monthly" | "quarterly">("monthly");
+  const [chartView, setChartView] = useState<DashboardView>("monthly");
+  const [dashboardSegment, setDashboardSegment] = useState<DashboardSegment>("All Clients");
+  const [dashboardFocus, setDashboardFocus] = useState<DashboardFocus>("profitability");
+  const [servicesApi, setServicesApi] = useState<CarouselApi>();
+  const [serviceIndex, setServiceIndex] = useState(0);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -404,7 +515,58 @@ const ApkaVcfoSite = () => {
     [activeCategory],
   );
 
-  const chartData = chartView === "monthly" ? monthlyChartData : quarterlyChartData;
+  const serviceSlides = useMemo(() => chunkItems(filteredServices, isMobile ? 1 : 3), [filteredServices, isMobile]);
+
+  const chartData = dashboardData[chartView][dashboardSegment];
+  const latestPoint = chartData[chartData.length - 1];
+  const previousPoint = chartData[Math.max(chartData.length - 2, 0)];
+  const focusContent = dashboardFocusContent[dashboardFocus];
+  const revenueDelta = latestPoint.revenue - previousPoint.revenue;
+  const marginDelta = latestPoint.margin - previousPoint.margin;
+  const collectionsDelta = previousPoint.receivables - latestPoint.receivables;
+
+  const dashboardSummary = [
+    {
+      label: "Run-rate Revenue",
+      value: formatLakhs(latestPoint.revenue),
+      detail: `${revenueDelta >= 0 ? "+" : ""}${revenueDelta}L vs previous period`,
+    },
+    {
+      label: "Net Profit %",
+      value: `${latestPoint.margin}%`,
+      detail: `${marginDelta >= 0 ? "+" : ""}${marginDelta}% movement`,
+    },
+    {
+      label: "Cash Buffer",
+      value: formatLakhs(latestPoint.cash),
+      detail: `${chartView === "monthly" ? "Current" : "Quarter-end"} liquidity view`,
+    },
+    {
+      label: "Collections Pressure",
+      value: formatLakhs(latestPoint.receivables),
+      detail: `${collectionsDelta >= 0 ? "Improving" : "Watchlist"} receivables trend`,
+    },
+  ];
+
+  useEffect(() => {
+    if (!servicesApi) return;
+
+    const updateIndex = () => setServiceIndex(servicesApi.selectedScrollSnap());
+
+    updateIndex();
+    servicesApi.on("select", updateIndex);
+    servicesApi.on("reInit", updateIndex);
+
+    return () => {
+      servicesApi.off("select", updateIndex);
+      servicesApi.off("reInit", updateIndex);
+    };
+  }, [servicesApi]);
+
+  useEffect(() => {
+    servicesApi?.scrollTo(0);
+    setServiceIndex(0);
+  }, [activeCategory, servicesApi]);
 
   return (
     <>
@@ -414,9 +576,7 @@ const ApkaVcfoSite = () => {
         <div className={cn("container rounded-full transition-all duration-300", scrolled ? "glass-nav shadow-brand" : "bg-primary/45 text-primary-foreground") }>
           <div className="flex items-center justify-between gap-4 px-4 py-3 md:px-6">
             <a href="#top" className="flex items-center gap-3" aria-label="ApkaVCFO home">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/15 bg-card p-1 shadow-soft">
-                <img src={logo} alt="ApkaVCFO logo" className="h-full w-full rounded-full object-cover" />
-              </span>
+              <img src={logo} alt="ApkaVCFO logo" className="h-11 w-auto object-contain" />
               <div>
                 <p className="font-display text-xl font-semibold leading-none text-primary-foreground">Apka VCFO</p>
                 <p className="mt-1 text-xs uppercase tracking-[0.2em] text-primary-foreground/60">Financial Clarity. Built for Scale.</p>
@@ -602,35 +762,107 @@ const ApkaVcfoSite = () => {
               />
             </SectionReveal>
 
-            <SectionReveal delay={120} className="mt-10 flex flex-wrap justify-center gap-3">
-              {serviceCategories.map((category) => (
-                <Button
-                  key={category}
-                  variant={activeCategory === category ? "selector-active" : "selector"}
-                  onClick={() => setActiveCategory(category)}
-                >
-                  {category}
-                </Button>
-              ))}
-            </SectionReveal>
+            <div className="mt-10 flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+              <SectionReveal delay={120} className="flex flex-wrap justify-center gap-3 xl:justify-start">
+                {serviceCategories.map((category) => (
+                  <Button
+                    key={category}
+                    variant={activeCategory === category ? "selector-active" : "selector"}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </SectionReveal>
 
-            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {filteredServices.map((service, index) => {
-                const Icon = service.icon;
-                return (
-                  <SectionReveal key={service.title} delay={index * 35} className="service-card">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
-                        <Icon className="h-6 w-6" />
-                      </div>
-                      <span className="font-stats text-xs uppercase tracking-[0.18em] text-muted-foreground">{service.category}</span>
-                    </div>
-                    <h3 className="mt-5 text-xl font-semibold leading-snug">{service.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-muted-foreground">{service.description}</p>
-                  </SectionReveal>
-                );
-              })}
+              <SectionReveal delay={160} className="flex flex-wrap items-center justify-center gap-3 xl:justify-end">
+                <div className="rounded-full border border-border/70 bg-secondary px-4 py-2 font-stats text-sm text-foreground">
+                  {filteredServices.length} service modules in this track
+                </div>
+                <div className="rounded-full border border-border/70 bg-background px-4 py-2 text-sm text-muted-foreground">
+                  Swipe or use arrows to browse without stretching the page
+                </div>
+              </SectionReveal>
             </div>
+
+            <SectionReveal delay={200} className="service-slider-shell mt-12 overflow-hidden p-6 md:p-8">
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="font-stats text-sm uppercase tracking-[0.18em] text-muted-foreground">Service Carousel</p>
+                  <h3 className="mt-2 text-2xl font-semibold text-foreground">Compact, category-based service browsing</h3>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 md:justify-end">
+                  <span className="text-sm text-muted-foreground">
+                    Slide {serviceSlides.length ? serviceIndex + 1 : 0} / {serviceSlides.length}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="pill"
+                      size="icon"
+                      className="h-11 w-11"
+                      onClick={() => servicesApi?.scrollPrev()}
+                      disabled={!servicesApi?.canScrollPrev()}
+                    >
+                      <ChevronLeft />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="pill"
+                      size="icon"
+                      className="h-11 w-11"
+                      onClick={() => servicesApi?.scrollNext()}
+                      disabled={!servicesApi?.canScrollNext()}
+                    >
+                      <ChevronRight />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <Carousel className="mt-8" opts={{ align: "start" }} setApi={setServicesApi}>
+                <CarouselContent>
+                  {serviceSlides.map((slide, slideIdx) => (
+                    <CarouselItem key={`${activeCategory}-${slideIdx}`}>
+                      <div className={cn("grid gap-5", isMobile ? "grid-cols-1" : "md:grid-cols-3")}>
+                        {slide.map((service) => {
+                          const Icon = service.icon;
+
+                          return (
+                            <article key={service.title} className="service-card h-full p-6">
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+                                  <Icon className="h-6 w-6" />
+                                </div>
+                                <span className="font-stats text-xs uppercase tracking-[0.18em] text-muted-foreground">{service.category}</span>
+                              </div>
+                              <h3 className="mt-5 text-xl font-semibold leading-snug text-foreground">{service.title}</h3>
+                              <p className="mt-3 text-sm leading-7 text-muted-foreground">{service.description}</p>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+
+              <div className="mt-6 flex justify-center gap-2">
+                {serviceSlides.map((_, index) => (
+                  <button
+                    key={`dot-${index}`}
+                    type="button"
+                    aria-label={`Go to service slide ${index + 1}`}
+                    className={cn(
+                      "h-2.5 rounded-full transition-all duration-300",
+                      serviceIndex === index ? "w-8 bg-accent" : "w-2.5 bg-border hover:bg-accent/40",
+                    )}
+                    onClick={() => servicesApi?.scrollTo(index)}
+                  />
+                ))}
+              </div>
+            </SectionReveal>
           </div>
         </section>
 
@@ -740,54 +972,186 @@ const ApkaVcfoSite = () => {
               />
             </SectionReveal>
 
-            <SectionReveal delay={120} className="surface-card mt-14 overflow-hidden p-6 md:p-8">
-              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <SectionReveal delay={120} className="dashboard-shell mt-14 overflow-hidden p-6 md:p-8">
+              <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
                 <div>
-                  <p className="font-stats text-sm uppercase tracking-[0.2em] text-muted-foreground">Revenue in Lakhs + Net Profit %</p>
-                  <h3 className="mt-2 text-2xl font-semibold">Decision-grade monthly reporting</h3>
+                  <p className="font-stats text-sm uppercase tracking-[0.2em] text-muted-foreground">Revenue in Lakhs + Net Profit % + Cash Buffer</p>
+                  <h3 className="mt-2 text-2xl font-semibold text-foreground md:text-3xl">Decision-grade reporting with filters, callouts, and action signals</h3>
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
+                    This dashboard now feels closer to a CFO reporting system — not just a basic chart — with segment filters, trend overlays, and decision notes.
+                  </p>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <Button variant={chartView === "monthly" ? "selector-active" : "selector"} onClick={() => setChartView("monthly")}>Monthly View</Button>
-                  <Button variant={chartView === "quarterly" ? "selector-active" : "selector"} onClick={() => setChartView("quarterly")}>Quarterly Trend</Button>
+                <div className="space-y-3 xl:text-right">
+                  <div className="flex flex-wrap gap-3 xl:justify-end">
+                    <Button variant={chartView === "monthly" ? "selector-active" : "selector"} onClick={() => setChartView("monthly")}>
+                      Monthly View
+                    </Button>
+                    <Button variant={chartView === "quarterly" ? "selector-active" : "selector"} onClick={() => setChartView("quarterly")}>
+                      Quarterly Trend
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-3 xl:justify-end">
+                    {dashboardSegments.map((segment) => (
+                      <Button
+                        key={segment}
+                        variant={dashboardSegment === segment ? "selector-active" : "selector"}
+                        onClick={() => setDashboardSegment(segment)}
+                      >
+                        {segment}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-8 h-[360px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={chartData} margin={{ top: 12, right: 20, left: 0, bottom: 0 }}>
-                    <CartesianGrid vertical={false} strokeDasharray="4 6" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-                    <YAxis
-                      yAxisId="left"
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-                      tickFormatter={(value) => `${value}L`}
-                    />
-                    <YAxis
-                      yAxisId="right"
-                      orientation="right"
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-                      tickFormatter={(value) => `${value}%`}
-                    />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Bar yAxisId="left" dataKey="revenue" name="Revenue" radius={[12, 12, 0, 0]} fill="hsl(var(--chart-revenue))" barSize={chartView === "monthly" ? 36 : 54} />
-                    <Line yAxisId="right" type="monotone" dataKey="margin" name="Net Profit" stroke="hsl(var(--chart-margin))" strokeWidth={3} dot={{ r: 4, fill: "hsl(var(--chart-margin))" }} activeDot={{ r: 5 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="mt-8 grid gap-4 md:grid-cols-3">
-                {insightCards.map((insight) => (
-                  <div key={insight.title} className="rounded-2xl bg-secondary p-5">
-                    <p className="font-stats text-xs uppercase tracking-[0.18em] text-accent">Insight</p>
-                    <h4 className="mt-3 text-lg font-semibold text-foreground">{insight.title}</h4>
-                    <p className="mt-2 text-sm leading-7 text-muted-foreground">{insight.description}</p>
+              <div className="mt-8 grid gap-4 lg:grid-cols-4">
+                {dashboardSummary.map((item) => (
+                  <div key={item.label} className="rounded-[1.5rem] border border-border/70 bg-background/80 p-5">
+                    <p className="font-stats text-xs uppercase tracking-[0.18em] text-muted-foreground">{item.label}</p>
+                    <p className="mt-3 text-2xl font-semibold text-foreground">{item.value}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{item.detail}</p>
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-8 grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
+                <div className="rounded-[1.75rem] border border-border/70 bg-background/70 p-5 md:p-6">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <p className="font-stats text-sm uppercase tracking-[0.18em] text-muted-foreground">{dashboardSegment}</p>
+                      <h4 className="mt-2 text-xl font-semibold text-foreground">Revenue, margin, and liquidity in one command view</h4>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                      <span className="rounded-full border border-border/70 bg-card px-3 py-1.5">Revenue Bars</span>
+                      <span className="rounded-full border border-border/70 bg-card px-3 py-1.5">Net Profit Line</span>
+                      <span className="rounded-full border border-border/70 bg-card px-3 py-1.5">Cash Buffer Area</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 h-[380px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
+                        <CartesianGrid vertical={false} strokeDasharray="4 6" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+                        <YAxis
+                          yAxisId="left"
+                          tickLine={false}
+                          axisLine={false}
+                          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                          tickFormatter={(value) => `${value}L`}
+                        />
+                        <YAxis
+                          yAxisId="right"
+                          orientation="right"
+                          tickLine={false}
+                          axisLine={false}
+                          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                          tickFormatter={(value) => `${value}%`}
+                        />
+                        <Tooltip content={<ChartTooltip />} />
+                        <ReferenceLine yAxisId="right" y={15} stroke="hsl(var(--border))" strokeDasharray="4 4" />
+                        <Area
+                          yAxisId="left"
+                          type="monotone"
+                          dataKey="cash"
+                          name="Cash Buffer"
+                          stroke="hsl(var(--accent))"
+                          fill="hsl(var(--accent) / 0.12)"
+                          strokeWidth={2}
+                        />
+                        <Bar
+                          yAxisId="left"
+                          dataKey="revenue"
+                          name="Revenue"
+                          radius={[12, 12, 0, 0]}
+                          fill="hsl(var(--chart-revenue))"
+                          barSize={chartView === "monthly" ? 32 : 52}
+                        />
+                        <Line
+                          yAxisId="right"
+                          type="monotone"
+                          dataKey="margin"
+                          name="Net Profit"
+                          stroke="hsl(var(--chart-margin))"
+                          strokeWidth={3}
+                          dot={{ r: 4, fill: "hsl(var(--chart-margin))" }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="mt-6 grid gap-4 md:grid-cols-3">
+                    {dashboardFeatureCards.map((insight) => (
+                      <div key={insight.title} className="rounded-[1.5rem] border border-border/70 bg-card/80 p-5">
+                        <p className="font-stats text-xs uppercase tracking-[0.18em] text-accent">Insight</p>
+                        <h4 className="mt-3 text-lg font-semibold text-foreground">{insight.title}</h4>
+                        <p className="mt-2 text-sm leading-7 text-muted-foreground">{insight.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-6">
+                  <div className="rounded-[1.75rem] border border-border/70 bg-background/70 p-6">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-stats text-sm uppercase tracking-[0.18em] text-muted-foreground">Analysis Filters</p>
+                        <h4 className="mt-2 text-xl font-semibold text-foreground">Focus the decision layer</h4>
+                      </div>
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary text-accent">
+                        <Filter className="h-5 w-5" />
+                      </div>
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      {dashboardFocusOptions.map((option) => (
+                        <Button
+                          key={option.id}
+                          variant={dashboardFocus === option.id ? "selector-active" : "selector"}
+                          onClick={() => setDashboardFocus(option.id)}
+                        >
+                          {option.label}
+                        </Button>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 rounded-[1.5rem] bg-secondary/80 p-5">
+                      <p className="font-stats text-xs uppercase tracking-[0.18em] text-accent">Current Focus</p>
+                      <h5 className="mt-3 text-lg font-semibold text-foreground">{focusContent.title}</h5>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">{focusContent.description}</p>
+                    </div>
+
+                    <div className="mt-5 space-y-3">
+                      {focusContent.bullets.map((bullet) => (
+                        <div key={bullet} className="flex gap-3 rounded-[1.25rem] border border-border/70 bg-card/80 px-4 py-3">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                          <p className="text-sm leading-6 text-muted-foreground">{bullet}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-[1.75rem] bg-primary p-6 text-primary-foreground shadow-brand">
+                    <p className="font-stats text-sm uppercase tracking-[0.18em] text-primary-foreground/60">CFO Callout</p>
+                    <h4 className="mt-3 text-2xl font-semibold">{focusContent.callout}</h4>
+                    <div className="mt-6 space-y-3">
+                      <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
+                        <p className="text-sm text-primary-foreground/72">Average net margin across this filter</p>
+                        <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{average(chartData.map((item) => item.margin))}%</p>
+                      </div>
+                      <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
+                        <p className="text-sm text-primary-foreground/72">Budget variance in latest period</p>
+                        <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{latestPoint.variance >= 0 ? "+" : ""}{latestPoint.variance}%</p>
+                      </div>
+                      <div className="rounded-[1.25rem] border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-3">
+                        <p className="text-sm text-primary-foreground/72">Receivables watchlist</p>
+                        <p className="mt-1 font-stats text-xl font-semibold text-primary-foreground">{formatLakhs(latestPoint.receivables)}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </SectionReveal>
           </div>
@@ -886,43 +1250,6 @@ const ApkaVcfoSite = () => {
           </div>
         </section>
 
-        <section className="section-pad bg-secondary">
-          <div className="container">
-            <SectionReveal>
-              <SectionHeading
-                kicker="Testimonials"
-                title="What Clients Say"
-                subtitle="Real outcomes from real businesses."
-              />
-            </SectionReveal>
-
-            <div className="mt-14 grid gap-6 lg:grid-cols-3">
-              {testimonials.map((testimonial, index) => (
-                <SectionReveal key={testimonial.name} delay={index * 90} className="surface-card p-6">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={cn(
-                        "flex h-14 w-14 items-center justify-center rounded-full font-stats text-base font-semibold",
-                        testimonial.accent === "accent" && "bg-accent text-accent-foreground",
-                        testimonial.accent === "primary" && "bg-primary text-primary-foreground",
-                        testimonial.accent === "success" && "bg-success text-success-foreground",
-                      )}
-                    >
-                      {testimonial.initials}
-                    </div>
-                    <div>
-                      <p className="text-lg text-accent">★★★★★</p>
-                      <p className="font-semibold text-foreground">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground">{testimonial.title}</p>
-                    </div>
-                  </div>
-                  <p className="mt-6 text-base leading-8 text-muted-foreground">“{testimonial.quote}”</p>
-                </SectionReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section id="contact" className="section-pad scroll-mt-28 bg-card">
           <div className="container">
             <SectionReveal>
@@ -990,9 +1317,7 @@ const ApkaVcfoSite = () => {
         <div className="container grid gap-10 md:grid-cols-2 xl:grid-cols-4">
           <div>
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/15 bg-card p-1 shadow-soft">
-                <img src={logo} alt="ApkaVCFO logo" className="h-full w-full rounded-full object-cover" loading="lazy" />
-              </span>
+              <img src={logo} alt="ApkaVCFO logo" className="h-12 w-auto object-contain" loading="lazy" />
               <div>
                 <p className="font-display text-2xl font-semibold">ApkaVCFO</p>
                 <p className="text-sm text-primary-foreground/72">Financial Clarity. Built for Scale.</p>
