@@ -10,50 +10,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 215 25% 27%;
+    --background: 36 33% 97%;
+    --foreground: 218 31% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 28% 17%;
+    --card-foreground: 218 31% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 28% 17%;
+    --popover-foreground: 218 31% 18%;
 
-    --primary: 215 28% 17%;
+    --primary: 220 45% 14%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 215 28% 17%;
+    --secondary: 36 36% 93%;
+    --secondary-foreground: 218 31% 18%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 32 27% 92%;
+    --muted-foreground: 215 14% 42%;
 
-    --accent: 29 89% 37%;
+    --accent: 24 83% 43%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 32 95% 44%;
-    --success: 160 84% 31%;
+    --accent-light: 34 90% 55%;
+    --success: 153 62% 34%;
     --success-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 32% 90%;
-    --input: 214 32% 90%;
-    --ring: 29 89% 37%;
+    --border: 33 23% 84%;
+    --input: 33 23% 84%;
+    --ring: 24 83% 43%;
 
     --radius: 1rem;
 
-    --hero: 222 47% 11%;
+    --hero: 220 53% 10%;
     --hero-foreground: 0 0% 100%;
-    --surface-dark: 217 33% 18%;
+    --surface-dark: 218 31% 17%;
     --surface-dark-foreground: 210 40% 98%;
-    --chart-revenue: 215 28% 17%;
-    --chart-margin: 29 89% 37%;
-    --gradient-copper: linear-gradient(135deg, hsl(var(--accent-light)), hsl(var(--accent)));
-    --gradient-dark: linear-gradient(160deg, hsl(var(--hero)), hsl(var(--primary)) 55%, hsl(215 25% 24%));
-    --shadow-brand: 0 24px 80px -24px hsl(var(--primary) / 0.28);
-    --shadow-glow: 0 18px 50px -20px hsl(var(--accent) / 0.55);
-    --shadow-soft: 0 16px 40px -24px hsl(var(--primary) / 0.22);
+    --chart-revenue: 220 45% 18%;
+    --chart-margin: 24 83% 43%;
+    --gradient-copper: linear-gradient(135deg, hsl(var(--accent-light)), hsl(var(--accent)) 62%, hsl(16 78% 42%));
+    --gradient-dark: linear-gradient(145deg, hsl(var(--hero)) 0%, hsl(var(--primary)) 54%, hsl(214 34% 20%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(var(--secondary) / 0.9));
+    --shadow-brand: 0 28px 90px -28px hsl(var(--primary) / 0.34);
+    --shadow-glow: 0 22px 60px -26px hsl(var(--accent) / 0.45);
+    --shadow-soft: 0 18px 42px -28px hsl(var(--primary) / 0.2);
 
     --sidebar-background: 0 0% 98%;
 
@@ -125,7 +126,9 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-body antialiased;
-    background-image: radial-gradient(circle at top, hsl(var(--secondary)) 0%, hsl(var(--background)) 38%);
+    background-image:
+      radial-gradient(circle at top left, hsl(var(--accent) / 0.08), transparent 28%),
+      radial-gradient(circle at top, hsl(var(--secondary)) 0%, hsl(var(--background)) 42%);
   }
 
   h1,
@@ -154,11 +157,13 @@ All colors MUST be HSL.
   }
 
   .glass-nav {
-    @apply border border-primary-foreground/10 bg-primary/75 text-primary-foreground backdrop-blur-xl;
+    @apply border border-primary-foreground/10 text-primary-foreground backdrop-blur-xl;
+    background-color: hsl(var(--primary) / 0.8);
   }
 
   .surface-card {
     @apply rounded-2xl border border-border/70 bg-card shadow-brand;
+    background-image: var(--gradient-surface);
   }
 
   .surface-dark-card {
@@ -167,6 +172,16 @@ All colors MUST be HSL.
 
   .service-card {
     @apply surface-card h-full p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/40 hover:shadow-glow;
+  }
+
+  .service-slider-shell {
+    @apply rounded-[2rem] border border-border/70 shadow-brand;
+    background-image: linear-gradient(180deg, hsl(var(--card)), hsl(var(--secondary) / 0.7));
+  }
+
+  .dashboard-shell {
+    @apply rounded-[2rem] border border-border/70 shadow-brand;
+    background-image: linear-gradient(180deg, hsl(var(--card)), hsl(var(--secondary) / 0.8));
   }
 
   .metric-chip {
