@@ -47,8 +47,8 @@ All colors MUST be HSL.
     --hero-foreground: 0 0% 100%;
     --surface-dark: 218 31% 17%;
     --surface-dark-foreground: 210 40% 98%;
-    --brand-panel: 24 22% 24%;
-    --brand-panel-foreground: 36 38% 92%;
+    --brand-panel: 34 44% 83%;
+    --brand-panel-foreground: 220 45% 14%;
     --chart-revenue: 220 45% 18%;
     --chart-margin: 24 83% 43%;
     --gradient-copper: linear-gradient(135deg, hsl(var(--accent-light)), hsl(var(--accent)) 62%, hsl(16 78% 42%));
@@ -163,11 +163,12 @@ All colors MUST be HSL.
     background-color: hsl(var(--primary) / 0.8);
   }
 
-   .brand-logo-panel {
-     @apply rounded-2xl border border-primary-foreground/10;
-     background-color: hsl(var(--brand-panel));
-     color: hsl(var(--brand-panel-foreground));
-   }
+  .brand-logo-panel {
+    @apply rounded-2xl border shadow-soft;
+    border-color: hsl(var(--accent) / 0.16);
+    background-color: hsl(var(--brand-panel));
+    color: hsl(var(--brand-panel-foreground));
+  }
 
   .surface-card {
     @apply rounded-2xl border border-border/70 bg-card shadow-brand;
