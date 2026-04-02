@@ -57,7 +57,7 @@ import {
 } from "recharts";
 
 import founderPhoto from "@/assets/mayank-bansal-photo.jpg";
-import logo from "@/assets/apkavcfo-logo-clean.png";
+import logo from "@/assets/apka-vcfo-logo-final.png";
 import AnimatedCounter from "@/components/site/AnimatedCounter";
 import SectionReveal from "@/components/site/SectionReveal";
 import { Button } from "@/components/ui/button";
@@ -514,7 +514,7 @@ const ApkaVcfoSite = () => {
     [activeCategory],
   );
 
-  const serviceSlides = useMemo(() => chunkItems(filteredServices, isMobile ? 1 : 3), [filteredServices, isMobile]);
+  const serviceSlides = useMemo(() => chunkItems(filteredServices, isMobile ? 1 : 6), [filteredServices, isMobile]);
 
   const chartData = dashboardData[chartView][dashboardSegment];
   const latestPoint = chartData[chartData.length - 1];
@@ -574,12 +574,8 @@ const ApkaVcfoSite = () => {
       <header className="fixed inset-x-0 top-0 z-50 px-4 py-4">
         <div className={cn("container rounded-full transition-all duration-300", scrolled ? "glass-nav shadow-brand" : "bg-primary/45 text-primary-foreground") }>
           <div className="flex items-center justify-between gap-4 px-4 py-3 md:px-6">
-            <a href="#top" className="flex items-center gap-3" aria-label="ApkaVCFO home">
+            <a href="#top" className="brand-logo-panel flex items-center gap-3 px-3 py-2" aria-label="ApkaVCFO home">
               <img src={logo} alt="ApkaVCFO logo" className="h-11 w-auto object-contain" />
-              <div>
-                <p className="font-display text-xl font-semibold leading-none text-primary-foreground">Apka VCFO</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.2em] text-primary-foreground/60">Financial Clarity. Built for Scale.</p>
-              </div>
             </a>
 
             <nav className="hidden items-center gap-2 lg:flex">
@@ -789,6 +785,7 @@ const ApkaVcfoSite = () => {
                 <div>
                   <p className="font-stats text-sm uppercase tracking-[0.18em] text-muted-foreground">Service Carousel</p>
                   <h3 className="mt-2 text-2xl font-semibold text-foreground">Compact, category-based service browsing</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">6 services per slide in a balanced 3 + 3 layout.</p>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 md:justify-end">
@@ -824,7 +821,7 @@ const ApkaVcfoSite = () => {
                 <CarouselContent>
                   {serviceSlides.map((slide, slideIdx) => (
                     <CarouselItem key={`${activeCategory}-${slideIdx}`}>
-                      <div className={cn("grid gap-5", isMobile ? "grid-cols-1" : "md:grid-cols-3")}>
+                      <div className={cn("grid gap-5", isMobile ? "grid-cols-1" : "md:grid-cols-2 xl:grid-cols-3")}>
                         {slide.map((service) => {
                           const Icon = service.icon;
 
@@ -1315,12 +1312,8 @@ const ApkaVcfoSite = () => {
       <footer className="bg-primary py-16 text-primary-foreground">
         <div className="container grid gap-10 md:grid-cols-2 xl:grid-cols-4">
           <div>
-            <div className="flex items-center gap-3">
+            <div className="brand-logo-panel inline-flex items-center gap-3 px-4 py-3">
               <img src={logo} alt="ApkaVCFO logo" className="h-12 w-auto object-contain" loading="lazy" />
-              <div>
-                <p className="font-display text-2xl font-semibold">ApkaVCFO</p>
-                <p className="text-sm text-primary-foreground/72">Financial Clarity. Built for Scale.</p>
-              </div>
             </div>
             <p className="mt-5 max-w-xs text-sm leading-7 text-primary-foreground/68">From Udaipur, India — Serving the World.</p>
             <div className="mt-6 flex gap-3">
