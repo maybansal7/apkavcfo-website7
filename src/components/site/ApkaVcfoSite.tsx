@@ -372,7 +372,6 @@ const processSteps = [
 ];
 
 const stats = [
-  { value: 20, suffix: "+", label: "Companies Served" },
   { value: 3, label: "Countries (India, USA, UAE)" },
   { value: 10, suffix: "+", label: "Years Experience" },
   { value: 30, suffix: "+", label: "Finance Services Offered" },
@@ -1187,7 +1186,7 @@ const ApkaVcfoSite = () => {
         </section>
 
         <section className="bg-accent py-8 text-accent-foreground">
-          <div className="container grid gap-8 text-center md:grid-cols-4 md:text-left">
+          <div className="container grid gap-8 text-center md:grid-cols-3 md:text-left">
             {stats.map((stat) => (
               <SectionReveal key={stat.label} className="space-y-2">
                 <div className="font-stats text-4xl font-bold md:text-5xl">
