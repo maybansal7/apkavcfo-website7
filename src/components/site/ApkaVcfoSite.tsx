@@ -391,7 +391,7 @@ const footerServices = ["Virtual CFO", "Cash Flow Management", "Tax Planning", "
 const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/mayank-bansal7/", icon: Linkedin },
   { label: "WhatsApp", href: whatsappUrl, icon: MessageCircle },
-  { label: "Email", href: "mailto:maybansal7@gmail.com", icon: Mail },
+  { label: "Email", href: "mailto:Mayank@apkavcfo.com", icon: Mail },
 ];
 
 const structuredData = {
@@ -414,7 +414,7 @@ const structuredData = {
       "@type": "ContactPoint",
       telephone: "+91-9967646344",
       contactType: "customer service",
-      email: "maybansal7@gmail.com",
+      email: "Mayank@apkavcfo.com",
       areaServed: ["IN", "US", "AE"],
     },
   ],
@@ -1277,10 +1277,10 @@ const ApkaVcfoSite = () => {
                   <Mail className="h-7 w-7 text-accent" />
                 </div>
                 <h3 className="mt-6 text-3xl font-semibold text-foreground">Send an Email</h3>
-                <p className="mt-3 text-lg text-muted-foreground">maybansal7@gmail.com</p>
+                <p className="mt-3 text-lg text-muted-foreground">Mayank@apkavcfo.com</p>
                 <p className="mt-5 text-base leading-8 text-muted-foreground">Best for detailed briefs, documents, or structured engagement queries.</p>
                 <Button asChild variant="pill" size="xl" className="mt-8">
-                  <a href="mailto:maybansal7@gmail.com">
+                  <a href="mailto:Mayank@apkavcfo.com">
                     Send Email
                     <ArrowRight />
                   </a>
@@ -1366,7 +1366,7 @@ const ApkaVcfoSite = () => {
             <h3 className="text-xl font-semibold">Contact</h3>
             <ul className="mt-5 space-y-4 text-sm text-primary-foreground/70">
               <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-accent" /> +91 9967 64 6344</li>
-              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-accent" /> maybansal7@gmail.com</li>
+              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-accent" /> Mayank@apkavcfo.com</li>
               <li className="flex items-center gap-3"><MapPin className="h-4 w-4 text-accent" /> Udaipur, Rajasthan, India</li>
               <li className="flex items-center gap-3"><IndianRupee className="h-4 w-4 text-accent" /> Serving MSMEs, CPA firms, and UAE businesses</li>
             </ul>
