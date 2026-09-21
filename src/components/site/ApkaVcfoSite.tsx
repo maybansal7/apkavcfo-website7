@@ -570,7 +570,7 @@ const ApkaVcfoSite = () => {
           <div>
             <img src={logo} alt="ApkaVCFO logo" className="h-10 w-auto object-contain" loading="lazy" />
             <p className="mt-4 max-w-xs text-sm leading-7 text-muted-foreground">
-              Virtual CFO & financial automation. From Udaipur, India — serving India, the USA and the UAE.
+              Virtual CFO & financial automation. From Udaipur, India — serving World.
             </p>
           </div>
           <div>
