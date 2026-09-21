@@ -41,7 +41,6 @@ const navItems = [
 
 const heroStats = [
   { value: "11+", label: "Years in finance leadership" },
-  { value: "3", label: "Countries served — IN · US · UAE" },
   { value: "30+", label: "Finance & automation services" },
 ];
 
