@@ -258,7 +258,7 @@ const ApkaVcfoSite = () => {
           <div className="container-x section pt-8 md:pt-10">
             <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div className="reveal">
-                <Eyebrow>CA Mayank Bansal · ICAI · Since 2014</Eyebrow>
+                <Eyebrow>CA Mayank Bansal · ICAI </Eyebrow>
                 <h1 className="mt-6 text-5xl font-bold leading-[0.98] tracking-tight text-balance md:text-7xl">
                   Finance,<br />
                   <span className="text-accent">systemized</span> and<br />
