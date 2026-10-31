@@ -8,7 +8,6 @@ import {
   Building2,
   Check,
   ChevronDown,
-  Globe2,
   Landmark,
   LineChart,
   Mail,
@@ -41,17 +40,17 @@ const navItems = [
 
 const heroStats = [
   { value: "11+", label: "Years in finance leadership" },
-  { value: "3", label: "Countries served — IN · US · UAE" },
+  { value: "17", label: "EU entities managed at Tata Communications" },
   { value: "30+", label: "Finance & automation services" },
 ];
 
 const trustBadges = [
   "Chartered Accountant — ICAI",
-  "QuickBooks Online Certified ProAdvisor",
-  "A2X Certified Partner",
+  "GST, TDS & FCRA expertise",
+  "Based in Udaipur · Serving India",
 ];
 
-const toolsStrip = ["QuickBooks", "Microsoft Excel", "Power Query", "Tally Prime", "Zoho Books", "Xero", "n8n"];
+const toolsStrip = ["Tally Prime", "Zoho Books", "Microsoft Excel", "Power Query", "GST Portal", "n8n"];
 
 type Pillar = { icon: LucideIcon; index: string; title: string; blurb: string; items: string[] };
 
@@ -75,14 +74,14 @@ const pillars: Pillar[] = [
     index: "03",
     title: "Automation & Systems",
     blurb: "Finance that runs on systems, not manual grunt work.",
-    items: ["Excel + Power Query tools", "Bank statement → GL conversion", "QuickBooks / Tally setup", "n8n workflow automation"],
+    items: ["Excel + Power Query tools", "Bank statement → Tally/Zoho conversion", "Tally / Zoho Books setup", "n8n workflow automation"],
   },
   {
-    icon: Globe2,
+    icon: Landmark,
     index: "04",
-    title: "International",
-    blurb: "CPA-firm-grade backend for US and UAE clients.",
-    items: ["US bookkeeping (QuickBooks)", "US financial statements & payroll", "UAE VAT filing & compliance", "IFRS-aligned reporting"],
+    title: "Compliance & Funding",
+    blurb: "Stay compliant and fundable — without the last-minute scramble.",
+    items: ["GST, TDS & ROC compliance", "Udyam & MSME registrations", "MUDRA, CGTMSE & PMEGP funding support", "Bank loan & CMA documentation"],
   },
 ];
 
@@ -102,18 +101,18 @@ const markets = [
     points: ["Virtual CFO & monthly MIS", "Cash flow, budgeting & P&L", "GST, TDS & compliance", "Government funding (MUDRA, CGTMSE, PMEGP)"],
   },
   {
-    icon: Landmark,
-    tag: "USA",
-    title: "US Accounting Firms",
-    sub: "CPA firm backend support",
-    points: ["QuickBooks Online bookkeeping", "Bank reconciliation & GL cleanup", "Financial statement preparation", "Month-end close & reporting"],
+    icon: Rocket,
+    tag: "India — growth",
+    title: "Startups & Growing Businesses",
+    sub: "Pre-seed to Series A",
+    points: ["Fundraise-ready financial models", "Investor MIS & data room support", "Valuation & cap-table support", "Burn, runway & unit economics"],
   },
   {
-    icon: Globe2,
-    tag: "UAE",
-    title: "UAE Businesses",
-    sub: "VAT & corporate tax ready",
-    points: ["VAT registration & filing", "FTA-compliant bookkeeping", "Corporate tax preparation", "IFRS financial reporting"],
+    icon: ShieldCheck,
+    tag: "India — impact",
+    title: "NGOs & Trusts",
+    sub: "FCRA & grant compliance",
+    points: ["FCRA registration & returns", "Donor / grant utilisation reporting", "Fund accounting & MIS", "Income tax, TDS & 12A/80G compliance"],
   },
 ];
 
@@ -135,9 +134,9 @@ const deliverables = [
 
 const founderSkills = [
   "Advanced Financial Modeling",
-  "QuickBooks Online Expert",
+  "Tally & Zoho Books Systems",
   "Excel + Power Query Automation",
-  "US & UAE Accounting",
+  "FCRA & NGO Compliance",
   "GST, TDS & Indian Compliance",
   "AI & Automation Tools",
 ];
@@ -149,7 +148,7 @@ const faqs = [
   },
   {
     q: "Who is this a good fit for?",
-    a: "Growing Indian MSMEs and startups (roughly ₹1–50 Cr revenue) that have outgrown basic accounting, and US/UAE firms that need a reliable, process-driven offshore finance backend.",
+    a: "Growing Indian MSMEs and startups (roughly ₹1–50 Cr revenue) that have outgrown basic accounting, and NGOs/Trusts that need clean grant and FCRA reporting.",
   },
   {
     q: "How is this different from my current accountant or Tally?",
@@ -160,8 +159,8 @@ const faqs = [
     a: "Every engagement starts with a free discovery call and a system audit. You then get a custom roadmap with clear deliverables and transparent, scope-based pricing — no obligation.",
   },
   {
-    q: "Do you work with US and UAE clients?",
-    a: "Yes. Alongside Indian MSMEs, I provide CPA-firm backend support in the US (QuickBooks bookkeeping, statements, payroll) and VAT / IFRS work for UAE businesses.",
+    q: "Do you work with businesses outside Udaipur?",
+    a: "Yes. Everything runs over WhatsApp, video calls and shared cloud files, so I support MSMEs, startups and NGOs anywhere in India.",
   },
 ];
 
@@ -265,7 +264,7 @@ const ApkaVcfoSite = () => {
                   built to scale.
                 </h1>
                 <p className="mt-7 max-w-xl text-lg leading-8 text-[hsl(var(--paper)/0.72)]">
-                  Virtual CFO services and financial automation for Indian MSMEs, US CPA firms and UAE businesses — clean monthly numbers, tighter cash flow, and systems that go beyond Tally and spreadsheets.
+                  Virtual CFO services and financial automation for Indian MSMEs, startups and NGOs — clean monthly numbers, tighter cash flow, and systems that go beyond Tally and spreadsheets.
                 </p>
                 <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                   <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-accent btn-lg">
@@ -357,7 +356,7 @@ const ApkaVcfoSite = () => {
                 </h2>
               </div>
               <p className="max-w-sm text-muted-foreground">
-                30+ services across strategy, control, automation and international accounting — run as one system.
+                30+ services across strategy, control, automation and compliance — run as one system.
               </p>
             </div>
 
@@ -393,8 +392,8 @@ const ApkaVcfoSite = () => {
           <div className="container-x">
             <div className="reveal max-w-2xl">
               <Eyebrow>Who I serve</Eyebrow>
-              <h2 className="mt-5 text-4xl font-bold tracking-tight text-balance md:text-5xl">One practice. Three markets.</h2>
-              <p className="mt-4 text-[hsl(var(--paper)/0.7)]">India-first, with a dedicated international accounting backend for US and UAE clients.</p>
+              <h2 className="mt-5 text-4xl font-bold tracking-tight text-balance md:text-5xl">Built for Indian businesses.</h2>
+              <p className="mt-4 text-[hsl(var(--paper)/0.7)]">Three kinds of clients, one finance system — Indian MSMEs, startups and NGOs/Trusts.</p>
             </div>
             <div className="mt-14 grid gap-6 lg:grid-cols-3">
               {markets.map((m) => {
@@ -478,7 +477,7 @@ const ApkaVcfoSite = () => {
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="rounded-md bg-accent px-3 py-1.5 font-mono2 text-xs font-bold uppercase tracking-wider text-accent-foreground">CA — ICAI</span>
-                <span className="rounded-md border border-[hsl(var(--paper)/0.2)] px-3 py-1.5 font-mono2 text-xs font-bold uppercase tracking-wider text-[hsl(var(--paper)/0.85)]">QuickBooks ProAdvisor</span>
+                <span className="rounded-md border border-[hsl(var(--paper)/0.2)] px-3 py-1.5 font-mono2 text-xs font-bold uppercase tracking-wider text-[hsl(var(--paper)/0.85)]">11+ Years</span>
               </div>
             </div>
             <div className="reveal">
@@ -486,7 +485,7 @@ const ApkaVcfoSite = () => {
               <h2 className="mt-5 text-4xl font-bold tracking-tight md:text-5xl">CA Mayank Bansal</h2>
               <p className="mt-2 text-xl text-[hsl(var(--paper)/0.82)]">Systems architect. Not just a CA.</p>
               <p className="mt-7 max-w-2xl leading-8 text-[hsl(var(--paper)/0.72)]">
-                A Chartered Accountant with 11+ years of experience who builds financial systems — not just files returns. From Udaipur, Mayank serves clients across India, the USA and the UAE, delivering CFO-level thinking at MSME-friendly investment.
+                A Chartered Accountant with 11+ years of experience who builds financial systems — not just files returns. From Udaipur, Mayank serves MSMEs, startups and NGOs across India, delivering CFO-level thinking at MSME-friendly investment.
               </p>
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {founderSkills.map((s) => (
@@ -570,7 +569,13 @@ const ApkaVcfoSite = () => {
           <div>
             <img src={logo} alt="ApkaVCFO logo" className="h-10 w-auto object-contain" loading="lazy" />
             <p className="mt-4 max-w-xs text-sm leading-7 text-muted-foreground">
-              Virtual CFO & financial automation. From Udaipur, India — serving World.
+              Virtual CFO & financial automation. From Udaipur, India — for Indian MSMEs, startups and NGOs.
+            </p>
+            <p className="mt-4 max-w-xs text-sm leading-7 text-muted-foreground">
+              US-based business?{" "}
+              <a href="https://equivoadvisory.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground/80 underline underline-offset-4 hover:text-accent">
+                Visit Equivo Advisory →
+              </a>
             </p>
           </div>
           <div>
@@ -586,8 +591,8 @@ const ApkaVcfoSite = () => {
             <ul className="mt-4 space-y-2.5 text-sm text-foreground/70">
               <li>Virtual CFO & MIS</li>
               <li>Cash-flow management</li>
-              <li>Excel & QuickBooks automation</li>
-              <li>US bookkeeping · UAE VAT</li>
+              <li>GST, TDS & compliance</li>
+              <li>Excel & Tally automation</li>
             </ul>
           </div>
           <div>
